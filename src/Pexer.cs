@@ -10,12 +10,13 @@ using OpenQA.Selenium.Interactions;
 
 namespace SilverPexer
 {
-    public class Pexer
+    public class Pexer : IDisposable
     {
         private readonly Random _random;
-        private readonly ChromeDriver _driver;
 
         private readonly IEnumerable<string> _pathToInn;
+
+        private ChromeDriver _driver;
 
         public Pexer(IEnumerable<string> pathToInn)
         {
@@ -27,7 +28,7 @@ namespace SilverPexer
 
         public void Login(string username, string password)
         {
-            _driver.Url = "http://www.silver-world.net";
+            _driver.Url = "https://www.silver-world.net";
             _driver.FindElementByName("login").SendKeys(username);
             _driver.FindElementByName("pass").SendKeys(password);
             _driver.FindElementByName("Submit2").Click();
@@ -108,7 +109,13 @@ namespace SilverPexer
             {
                 ClickOnMap(cell.Trim());
             }
-            _driver.Url = "http://www.silver-world.net/auberge.php";
+            _driver.Url = "https://www.silver-world.net/auberge.php";
+            if (!_driver.Url.Contains("auberge.php"))
+            {
+                Console.WriteLine("Could not open auberge.php");
+                return;
+            }
+
             var duree = _driver.FindElementByName("duree");
             duree.Clear();
             duree.SendKeys("24");
@@ -171,8 +178,32 @@ namespace SilverPexer
         {
             if (force || !_driver.Url.Contains("map.php"))
             {
-                _driver.Url = "http://www.silver-world.net/map.php";
+                _driver.Url = "https://www.silver-world.net/map.php";
             }
         }
+
+        #region IDisposable Support
+        private bool disposedValue = false; // To detect redundant calls
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    _driver.Close();
+                    _driver.Dispose();
+                    _driver = null;
+                }
+
+                disposedValue = true;
+            }
+        }
+
+        void IDisposable.Dispose()
+        {
+            Dispose(true);
+        }
+        #endregion
     }
 }

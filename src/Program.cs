@@ -38,13 +38,15 @@ namespace SilverPexer
                 password = ReadPassword();
             }
 
-            var pexer = new Pexer(configuration["pathToInn"].Split(','));
-            pexer.Login(username, password);
-
-            while (true)
+            using (var pexer = new Pexer(configuration["pathToInn"].Split(',')))
             {
-                pexer.KillAllMonsters();
-                pexer.WaitForMonsters();
+                pexer.Login(username, password);
+
+                while (true)
+                {
+                    pexer.KillAllMonsters();
+                    pexer.WaitForMonsters();
+                }
             }
         }
 
@@ -56,6 +58,13 @@ namespace SilverPexer
                 var key = System.Console.ReadKey(true);
                 if (key.Key == ConsoleKey.Enter)
                     break;
+                if (key.Key == ConsoleKey.Backspace)
+                {
+                    Console.WriteLine("\nBackspace is not supported, try again.");
+                    Console.Write("Password: ");
+                    return ReadPassword();
+                }
+
                 password += key.KeyChar;
                 Console.Write("*");
             }
