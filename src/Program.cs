@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using Microsoft.Extensions.Configuration;
 
 namespace SilverPexer
 {
@@ -6,11 +8,35 @@ namespace SilverPexer
     {
         public static void Main(string[] args)
         {
+            string username, password;
+
+            var builder = new ConfigurationBuilder()
+             .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.json");
+
+            var configuration = builder.Build();
+
             Console.Write("Username: ");
-            var username = Console.ReadLine();
+            if (!string.IsNullOrWhiteSpace(configuration["username"]))
+            {
+                Console.WriteLine("[Read from appsettings.json]");
+                username = configuration["username"];
+            }
+            else
+            {
+                username = Console.ReadLine();
+            }
 
             Console.Write("Password: ");
-            var password = ReadPassword();
+            if (!string.IsNullOrWhiteSpace(configuration["password"]))
+            {
+                Console.WriteLine("[Read from appsettings.json]");
+                password = configuration["password"];
+            }
+            else
+            {
+                password = ReadPassword();
+            }
 
             var pexer = new Pexer();
             pexer.Login(username, password);

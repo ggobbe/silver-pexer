@@ -5,11 +5,14 @@
     "emitEntryPoint": true,
     "copyToOutput": {
       "includeFiles": [
-        "./drivers/chromedriver.exe"
+        "./drivers/chromedriver.exe",
+        "appsettings.json"
       ]
     }
   },
   "dependencies": {
+    "Microsoft.Extensions.Configuration": "1.1.0",
+    "Microsoft.Extensions.Configuration.Json": "1.1.0",
     "Selenium.Support": "3.0.1",
     "Selenium.WebDriver": "3.0.1",
     "Selenium.WebDriver.ChromeDriver": "2.27.0"
