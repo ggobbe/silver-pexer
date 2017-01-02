@@ -139,9 +139,10 @@ namespace SilverPexer
             const int cellWidth = 20;
 
             var match = regex.Match(coordinates);
-            var x = match.Groups["latitude"].Value[0] - (int)'A';
-            var y = int.Parse(match.Groups["longitude"].Value) - 1;
+            var x = int.Parse(match.Groups["longitude"].Value) - 1;
+            var y = match.Groups["latitude"].Value[0] - (int)'A';
 
+            Thread.Sleep(TimeSpan.FromSeconds(1)); // wait for flash to load the map before to click on it
             Actions builder = new Actions(_driver);
             var map = _driver.FindElementByCssSelector("td[colspan=\"30\"][rowspan=\"12\"]");
             var xPos = (x * cellWidth) + (cellWidth / 2);
