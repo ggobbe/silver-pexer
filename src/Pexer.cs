@@ -99,13 +99,13 @@ namespace SilverPexer
         private void GoToSleep()
         {
             NavigateToMap();
-            ClickOnMap(190, 180);
-            ClickOnMap(210, 200);
-            _driver.Url = "http://www.silver-world.net/auberge.php";
-            var duree = _driver.FindElementByName("duree");
-            duree.Clear();
-            duree.SendKeys("24");
-            _driver.FindElementByCssSelector("input[name =\"Submit\"][value=\"m'endormir\"]").Click();
+            // ClickOnMap(190, 180);
+            // ClickOnMap(210, 200);
+            // _driver.Url = "http://www.silver-world.net/auberge.php";
+            // var duree = _driver.FindElementByName("duree");
+            // duree.Clear();
+            // duree.SendKeys("24");
+            // _driver.FindElementByCssSelector("input[name =\"Submit\"][value=\"m'endormir\"]").Click();
         }
 
         private bool IsOtherPlayerPresent()
