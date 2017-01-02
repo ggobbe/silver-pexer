@@ -123,7 +123,7 @@ namespace SilverPexer
 
         private void GrabLoot()
         {
-            _driver.FindElementByCssSelector("input[src=\"systeme/obj406.gif\"]").Click();
+            _driver.FindElementByCssSelector("input[src^=\"systeme/obj\"]").Click();
         }
 
         private bool IsNewMessagePresent()
@@ -133,7 +133,7 @@ namespace SilverPexer
 
         private bool IsLootPresent()
         {
-            return _driver.FindElements(By.CssSelector("input[src=\"systeme/obj406.gif\"]")).Any();
+            return _driver.FindElements(By.CssSelector("input[src^=\"systeme/obj\"]")).Any();
         }
 
         private void LevelUp()
