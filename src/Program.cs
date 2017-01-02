@@ -11,8 +11,8 @@ namespace SilverPexer
             string username, password;
 
             var builder = new ConfigurationBuilder()
-             .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsettings.json");
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json");
 
             var configuration = builder.Build();
 
@@ -38,7 +38,7 @@ namespace SilverPexer
                 password = ReadPassword();
             }
 
-            var pexer = new Pexer();
+            var pexer = new Pexer(configuration["pathToInn"].Split(','));
             pexer.Login(username, password);
 
             while (true)

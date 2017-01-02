@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
@@ -13,11 +15,14 @@ namespace SilverPexer
         private readonly Random _random;
         private readonly ChromeDriver _driver;
 
-        public Pexer()
+        private readonly IEnumerable<string> _pathToInn;
+
+        public Pexer(IEnumerable<string> pathToInn)
         {
             _random = new Random();
             _driver = new ChromeDriver(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "drivers"));
             _driver.Manage().Window.Maximize();
+            _pathToInn = pathToInn;
         }
 
         public void Login(string username, string password)
@@ -99,13 +104,15 @@ namespace SilverPexer
         private void GoToSleep()
         {
             NavigateToMap();
-            // ClickOnMap(190, 180);
-            // ClickOnMap(210, 200);
-            // _driver.Url = "http://www.silver-world.net/auberge.php";
-            // var duree = _driver.FindElementByName("duree");
-            // duree.Clear();
-            // duree.SendKeys("24");
-            // _driver.FindElementByCssSelector("input[name =\"Submit\"][value=\"m'endormir\"]").Click();
+            foreach (var cell in _pathToInn)
+            {
+                ClickOnMap(cell.Trim());
+            }
+            _driver.Url = "http://www.silver-world.net/auberge.php";
+            var duree = _driver.FindElementByName("duree");
+            duree.Clear();
+            duree.SendKeys("24");
+            _driver.FindElementByCssSelector("input[name =\"Submit\"][value=\"m'endormir\"]").Click();
         }
 
         private bool IsOtherPlayerPresent()
@@ -113,11 +120,26 @@ namespace SilverPexer
             return _driver.FindElements(By.CssSelector("a[href^=\"fight.php?type=user\"]")).Any();
         }
 
-        private void ClickOnMap(int x, int y)
+        private void ClickOnMap(string coordinates)
         {
+            var regex = new Regex(@"^(?<latitude>[A-Z])(?<longitude>[1-3]?[0-9])$");
+
+            if (!regex.IsMatch(coordinates))
+            {
+                throw new ArgumentException(nameof(coordinates), "Invalid map coordinates.");
+            }
+
+            const int cellWidth = 20;
+
+            var match = regex.Match(coordinates);
+            var x = match.Groups["latitude"].Value[0] - (int)'A';
+            var y = int.Parse(match.Groups["longitude"].Value) - 1;
+
             Actions builder = new Actions(_driver);
-            var map = _driver.FindElementByCssSelector("table[width=\"620\"][border=\"0\"]");
-            builder.MoveToElement(map, x, y);
+            var map = _driver.FindElementByCssSelector("td[colspan=\"30\"][rowspan=\"12\"]");
+            var xPos = (x * cellWidth) + (cellWidth / 2);
+            var yPos = (y * cellWidth) + (cellWidth / 2);
+            builder.MoveToElement(map, xPos, yPos);
             builder.Click().Perform();
         }
 
