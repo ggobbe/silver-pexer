@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using Microsoft.Extensions.Configuration;
 
 namespace SilverPexer
@@ -38,7 +39,9 @@ namespace SilverPexer
                 password = ReadPassword();
             }
 
-            using (var pexer = new Pexer(configuration["pathToInn"].Split(',')))
+            var pathToInn = configuration["pathToInn"].Split(',').Select(e => e.Trim());
+            var timeToSleep = configuration["timeToSleep"];
+            using (var pexer = new Pexer(pathToInn, timeToSleep))
             {
                 pexer.Login(username, password);
 

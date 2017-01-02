@@ -16,14 +16,17 @@ namespace SilverPexer
 
         private readonly IEnumerable<string> _pathToInn;
 
+        private readonly string _timeToSleep;
+
         private ChromeDriver _driver;
 
-        public Pexer(IEnumerable<string> pathToInn)
+        public Pexer(IEnumerable<string> pathToInn, string timeToSleep)
         {
             _random = new Random();
             _driver = new ChromeDriver(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "drivers"));
             _driver.Manage().Window.Maximize();
             _pathToInn = pathToInn;
+            _timeToSleep = timeToSleep;
         }
 
         public void Login(string username, string password)
@@ -118,7 +121,7 @@ namespace SilverPexer
 
             var duree = _driver.FindElementByName("duree");
             duree.Clear();
-            duree.SendKeys("24");
+            duree.SendKeys(_timeToSleep);
             _driver.FindElementByCssSelector("input[name =\"Submit\"][value=\"m'endormir\"]").Click();
         }
 
