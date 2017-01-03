@@ -11,7 +11,10 @@ namespace SilverPexer
 {
     public class Pexer : IDisposable
     {
+        private const string BaseUrl = "https://www.silver-world.net";
+
         private readonly Configuration _configuration;
+
         private readonly Random _random;
 
         private ChromeDriver _driver;
@@ -26,7 +29,7 @@ namespace SilverPexer
 
         public void Login()
         {
-            _driver.Url = "https://www.silver-world.net";
+            _driver.Url = BaseUrl;
             _driver.FindElementByName("login").SendKeys(_configuration.Username);
             _driver.FindElementByName("pass").SendKeys(_configuration.Password);
             _driver.FindElementByName("Submit2").Click();
@@ -107,7 +110,7 @@ namespace SilverPexer
             {
                 ClickOnMap(cell.Trim());
             }
-            _driver.Url = "https://www.silver-world.net/auberge.php";
+            _driver.Url = $"{BaseUrl}/auberge.php";
             if (!_driver.Url.Contains("auberge.php"))
             {
                 Console.WriteLine("Could not open auberge.php");
@@ -177,7 +180,7 @@ namespace SilverPexer
         {
             if (force || !_driver.Url.Contains("map.php"))
             {
-                _driver.Url = "https://www.silver-world.net/map.php";
+                _driver.Url = $"{BaseUrl}/map.php";
             }
         }
 
