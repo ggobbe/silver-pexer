@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using OpenQA.Selenium.Chrome;
 
 namespace SilverPexer
 {
@@ -20,11 +22,12 @@ namespace SilverPexer
                 configuration.Password = ConsoleHelper.ReadPassword();
             }
 
-            using (var pexer = new Pexer(configuration))
+            using (var driver = new ChromeDriver(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "drivers")))
             {
-                pexer.Login();
+                var pexer = new Pexer(configuration, driver);
 
-                while (true)
+                pexer.Login();
+                while (pexer.Continue)
                 {
                     pexer.KillAllMonsters();
                     pexer.WaitForMonsters();

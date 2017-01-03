@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -9,21 +8,23 @@ using OpenQA.Selenium.Interactions;
 
 namespace SilverPexer
 {
-    public class Pexer : IDisposable
+    public class Pexer
     {
+        public bool Continue { get; private set; } = true;
+
         private const string BaseUrl = "https://www.silver-world.net";
 
         private readonly Configuration _configuration;
 
         private readonly Random _random;
 
-        private ChromeDriver _driver;
+        private readonly ChromeDriver _driver;
 
-        public Pexer(Configuration configuration)
+        public Pexer(Configuration configuration, ChromeDriver driver)
         {
-            _configuration = configuration;
             _random = new Random();
-            _driver = new ChromeDriver(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "drivers"));
+            _configuration = configuration;
+            _driver = driver;
             _driver.Manage().Window.Maximize();
         }
 
@@ -37,7 +38,7 @@ namespace SilverPexer
 
         public void KillAllMonsters()
         {
-            while (IsMonsterPresent())
+            while (Continue && IsMonsterPresent())
             {
                 AttackMonster();
                 Thread.Sleep(_random.Next(100, 1000));
@@ -57,7 +58,7 @@ namespace SilverPexer
             if (IsOtherPlayerPresent())
             {
                 GoToSleep();
-                Environment.Exit(0);
+                return;
             }
 
             _driver.FindElementByCssSelector("a[href^=\"fight.php?type=monster\"]").Click();
@@ -73,7 +74,7 @@ namespace SilverPexer
 
         public void WaitForMonsters()
         {
-            while (!IsMonsterPresent())
+            while (Continue && !IsMonsterPresent())
             {
                 if (_driver.Url.Contains("levelup.php"))
                 {
@@ -83,13 +84,13 @@ namespace SilverPexer
                 if (IsNewMessagePresent())
                 {
                     GoToSleep();
-                    Environment.Exit(0);
+                    return;
                 }
 
                 if (IsOtherPlayerPresent())
                 {
                     GoToSleep();
-                    Environment.Exit(0);
+                    return;
                 }
 
                 if (IsLootPresent())
@@ -121,6 +122,9 @@ namespace SilverPexer
             duree.Clear();
             duree.SendKeys(_configuration.TimeToSleep);
             _driver.FindElementByCssSelector("input[name =\"Submit\"][value=\"m'endormir\"]").Click();
+            
+            // Stop looping
+            Continue = false;
         }
 
         private bool IsOtherPlayerPresent()
@@ -183,29 +187,5 @@ namespace SilverPexer
                 _driver.Url = $"{BaseUrl}/map.php";
             }
         }
-
-        #region IDisposable Support
-        private bool disposedValue = false; // To detect redundant calls
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
-                    _driver.Close();
-                    _driver.Dispose();
-                    _driver = null;
-                }
-
-                disposedValue = true;
-            }
-        }
-
-        void IDisposable.Dispose()
-        {
-            Dispose(true);
-        }
-        #endregion
     }
 }
