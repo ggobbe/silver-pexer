@@ -253,3 +253,7 @@ paket-files/
 
 # Visual Studio Code
 .vscode/
+
+# Visual Studio solution files
+*.sln
+*.xproj

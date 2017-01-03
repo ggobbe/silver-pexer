@@ -10,9 +10,9 @@ namespace SilverPexer
         private readonly IConfigurationRoot _configuration;
 
         private string _password;
-        private string _username;
         private string _pathToInn;
         private string _timeToSleep;
+        private string _username;
 
         public Configuration()
         {
