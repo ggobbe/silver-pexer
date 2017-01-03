@@ -9,41 +9,23 @@ namespace SilverPexer
     {
         public static void Main(string[] args)
         {
-            string username, password;
+            var configuration = new Configuration();
 
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json");
-
-            var configuration = builder.Build();
-
-            Console.Write("Username: ");
-            if (!string.IsNullOrWhiteSpace(configuration["username"]))
+            if (string.IsNullOrWhiteSpace(configuration.Username))
             {
-                Console.WriteLine("[Read from appsettings.json]");
-                username = configuration["username"];
-            }
-            else
-            {
-                username = Console.ReadLine();
+                Console.Write("Username: ");
+                configuration.Username = Console.ReadLine();
             }
 
-            Console.Write("Password: ");
-            if (!string.IsNullOrWhiteSpace(configuration["password"]))
+            if (string.IsNullOrWhiteSpace(configuration.Password))
             {
-                Console.WriteLine("[Read from appsettings.json]");
-                password = configuration["password"];
-            }
-            else
-            {
-                password = ReadPassword();
+                Console.Write("Password: ");
+                configuration.Password = ConsoleHelper.ReadPassword();
             }
 
-            var pathToInn = configuration["pathToInn"].Split(',').Select(e => e.Trim());
-            var timeToSleep = configuration["timeToSleep"];
-            using (var pexer = new Pexer(pathToInn, timeToSleep))
+            using (var pexer = new Pexer(configuration))
             {
-                pexer.Login(username, password);
+                pexer.Login();
 
                 while (true)
                 {
@@ -51,28 +33,6 @@ namespace SilverPexer
                     pexer.WaitForMonsters();
                 }
             }
-        }
-
-        private static string ReadPassword()
-        {
-            string password = null;
-            while (true)
-            {
-                var key = System.Console.ReadKey(true);
-                if (key.Key == ConsoleKey.Enter)
-                    break;
-                if (key.Key == ConsoleKey.Backspace)
-                {
-                    Console.WriteLine("\nBackspace is not supported, try again.");
-                    Console.Write("Password: ");
-                    return ReadPassword();
-                }
-
-                password += key.KeyChar;
-                Console.Write("*");
-            }
-            Console.WriteLine();
-            return password;
         }
     }
 }

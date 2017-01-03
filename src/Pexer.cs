@@ -12,28 +12,24 @@ namespace SilverPexer
 {
     public class Pexer : IDisposable
     {
+        private readonly Configuration _configuration;
         private readonly Random _random;
-
-        private readonly IEnumerable<string> _pathToInn;
-
-        private readonly string _timeToSleep;
 
         private ChromeDriver _driver;
 
-        public Pexer(IEnumerable<string> pathToInn, string timeToSleep)
+        public Pexer(Configuration configuration)
         {
+            _configuration = configuration;
             _random = new Random();
             _driver = new ChromeDriver(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "drivers"));
             _driver.Manage().Window.Maximize();
-            _pathToInn = pathToInn;
-            _timeToSleep = timeToSleep;
         }
 
-        public void Login(string username, string password)
+        public void Login()
         {
             _driver.Url = "https://www.silver-world.net";
-            _driver.FindElementByName("login").SendKeys(username);
-            _driver.FindElementByName("pass").SendKeys(password);
+            _driver.FindElementByName("login").SendKeys(_configuration.Username);
+            _driver.FindElementByName("pass").SendKeys(_configuration.Password);
             _driver.FindElementByName("Submit2").Click();
         }
 
@@ -108,7 +104,7 @@ namespace SilverPexer
         private void GoToSleep()
         {
             NavigateToMap();
-            foreach (var cell in _pathToInn)
+            foreach (var cell in _configuration.PathToInn)
             {
                 ClickOnMap(cell.Trim());
             }
@@ -121,7 +117,7 @@ namespace SilverPexer
 
             var duree = _driver.FindElementByName("duree");
             duree.Clear();
-            duree.SendKeys(_timeToSleep);
+            duree.SendKeys(_configuration.TimeToSleep);
             _driver.FindElementByCssSelector("input[name =\"Submit\"][value=\"m'endormir\"]").Click();
         }
 
