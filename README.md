@@ -1,11 +1,12 @@
 # Silver Pexer
 
 ## Build
-1. Install [.NET Core 1.1+ SDK ](https://www.microsoft.com/net/download/core#/current)
-2. Run `make.bat`
+1. Install the [.NET Framework 4.6.2 Developer Pack](http://go.microsoft.com/fwlink/?LinkId=780617)
+2. Install the [.NET Core 1.1+ SDK ](https://www.microsoft.com/net/download/core#/current)
+3. Run `make.bat`
 
 ## Run
-1. Build
+1. Build with `make.bat`
 2. Run `.\bin\SilverPexer.exe`
 
 ## Configuration
@@ -19,5 +20,6 @@ You can edit `.\bin\appsettings.json` to change the following settings :
 ## System Requirements
 
 - Windows 7+
-- .NET Framework 4.5.1
+- .NET Framework 4.6.2
+- .NET Core 1.1+
 - Google Chrome 55+
