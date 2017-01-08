@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Configuration;
 
@@ -17,7 +17,7 @@ namespace SilverPexer
         public Configuration()
         {
             var builder = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
+                .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
                 .AddJsonFile("appsettings.json", false, false);
 
             _configuration = builder.Build();
