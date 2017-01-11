@@ -13,6 +13,7 @@ namespace SilverPexer
         private string _pathToInn;
         private string _timeToSleep;
         private string _username;
+        private Stats _levelUp;
 
         public Configuration()
         {
@@ -49,6 +50,21 @@ namespace SilverPexer
         {
             get { return _timeToSleep ?? _configuration["timeToSleep"]; }
             set { _timeToSleep = value; }
+        }
+
+        public Stats LevelUp
+        {
+            get
+            {
+                var levelUp = new Stats()
+                {
+                    Constitution = int.Parse(_configuration["levelUp:constitution"]),
+                    Strength = int.Parse(_configuration["levelUp:strength"]),
+                    Agility = int.Parse(_configuration["levelUp:agility"]),
+                    Intelligence = int.Parse(_configuration["levelUp:intelligence"]),
+                };
+                return levelUp;
+            }
         }
     }
 }
