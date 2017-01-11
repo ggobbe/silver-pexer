@@ -122,7 +122,7 @@ namespace SilverPexer
             duree.Clear();
             duree.SendKeys(_configuration.TimeToSleep);
             _driver.FindElementByCssSelector("input[name =\"Submit\"][value=\"m'endormir\"]").Click();
-            
+
             // Stop looping
             Continue = false;
         }
@@ -173,10 +173,37 @@ namespace SilverPexer
 
         private void LevelUp()
         {
-            while (_driver.FindElementByName("left").GetAttribute("value") != "0")
+            int pointsLeft;
+            if (!int.TryParse(_driver.FindElementByName("left").GetAttribute("value"), out pointsLeft) || pointsLeft != _configuration.LevelUp.Total)
+            {
+                throw new InvalidOperationException("The amount of points left is different than the amount of points to distribute.");
+            }
+
+            var distributed = new Stats();
+            while (distributed.Constitution < _configuration.LevelUp.Constitution)
+            {
+                _driver.FindElementByName("Button").Click();
+                distributed.Constitution++;
+            }
+
+            while (distributed.Strength < _configuration.LevelUp.Strength)
+            {
+                _driver.FindElementByName("Button2").Click();
+                distributed.Strength++;
+            }
+
+            while (distributed.Agility < _configuration.LevelUp.Agility)
+            {
+                _driver.FindElementByName("Button3").Click();
+                distributed.Agility++;
+            }
+
+            while (distributed.Intelligence < _configuration.LevelUp.Intelligence)
             {
                 _driver.FindElementByName("Button4").Click();
+                distributed.Intelligence++;
             }
+
             _driver.FindElementByName("Submit").Click();
         }
 
