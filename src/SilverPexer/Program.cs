@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using Microsoft.Extensions.Logging;
+using NLog.Extensions.Logging;
 using OpenQA.Selenium.Chrome;
 
 namespace SilverPexer
@@ -8,7 +10,11 @@ namespace SilverPexer
     {
         public static void Main(string[] args)
         {
-            var configuration = new Configuration();
+            ILoggerFactory loggerFactory = new LoggerFactory()
+                .AddNLog();
+            ILogger logger = loggerFactory.CreateLogger<Program>();
+
+            var configuration = new Configuration(logger);
 
             if (string.IsNullOrWhiteSpace(configuration.Username))
             {
@@ -24,7 +30,7 @@ namespace SilverPexer
 
             using (var driver = new ChromeDriver(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "drivers")))
             {
-                var pexer = new Pexer(configuration, driver);
+                var pexer = new Pexer(configuration, driver, logger);
 
                 pexer.Login();
                 while (pexer.Continue)

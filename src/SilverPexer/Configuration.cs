@@ -2,39 +2,47 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace SilverPexer
 {
     public class Configuration
     {
+        private const string configurationFile = "appsettings.json";
+
         private readonly IConfigurationRoot _configuration;
 
+        private readonly ILogger _logger;
+
         private string _password;
-        private string _pathToInn;
+        private IEnumerable<string> _pathToInn;
         private string _timeToSleep;
         private string _username;
-        private Stats _levelUp;
         private int? _actionPoints;
-        private bool _goToSleepWhenMessage;
+        private bool? _goToSleepWhenMessage;
+        private Stats _levelUp;
 
-        public Configuration()
+        public Configuration(ILogger logger)
         {
+            _logger = logger;
+            _logger.LogDebug("Building configuration");
+
             var builder = new ConfigurationBuilder()
                 .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-                .AddJsonFile("appsettings.json", false, false);
+                .AddJsonFile(configurationFile, false, false);
 
             _configuration = builder.Build();
         }
 
         public string Username
         {
-            get { return _username ?? _configuration["username"]; }
+            get { return _username ?? (_username = GetConfiguration("username")); }
             set { _username = value; }
         }
 
         public string Password
         {
-            get { return _password ?? _configuration["password"]; }
+            get { return _password ?? (_password = GetConfiguration("password")); }
             set { _password = value; }
         }
 
@@ -42,42 +50,59 @@ namespace SilverPexer
         {
             get
             {
-                var path = _pathToInn ?? _configuration["pathToInn"];
-                return path.Split(',').Select(e => e.Trim());
+                if (_pathToInn == null)
+                {
+                    var path = GetConfiguration("pathToInn");
+                    _pathToInn = path.Split(',').Select(e => e.Trim());
+                }
+                return _pathToInn;
             }
-            set { _pathToInn = string.Join(",", value); }
         }
 
         public string TimeToSleep
         {
-            get { return _timeToSleep ?? _configuration["timeToSleep"]; }
-            set { _timeToSleep = value; }
+            get { return _timeToSleep ?? (_timeToSleep = GetConfiguration("timeToSleep")); }
         }
 
         public int? ActionPoints
         {
-            get { return _actionPoints ?? int.Parse(_configuration["actionPoints"]); }
-            set { _actionPoints = value; }
+            get { return _actionPoints ?? (_actionPoints = int.Parse(GetConfiguration("actionPoints"))); }
         }
 
         public bool GoToSleepWhenMessage
         {
-            get { return bool.Parse(_configuration["goToSleepWhenMessage"]); }
+            get
+            {
+                if (!_goToSleepWhenMessage.HasValue)
+                {
+                    _goToSleepWhenMessage = bool.Parse(GetConfiguration("goToSleepWhenMessage"));
+                }
+                return _goToSleepWhenMessage.Value;
+            }
         }
 
         public Stats LevelUp
         {
             get
             {
-                var levelUp = new Stats()
+                if (_levelUp == null)
                 {
-                    Constitution = int.Parse(_configuration["levelUp:constitution"]),
-                    Strength = int.Parse(_configuration["levelUp:strength"]),
-                    Agility = int.Parse(_configuration["levelUp:agility"]),
-                    Intelligence = int.Parse(_configuration["levelUp:intelligence"]),
-                };
-                return levelUp;
+                    _levelUp = new Stats()
+                    {
+                        Constitution = int.Parse(GetConfiguration("levelUp:constitution")),
+                        Strength = int.Parse(GetConfiguration("levelUp:strength")),
+                        Agility = int.Parse(GetConfiguration("levelUp:agility")),
+                        Intelligence = int.Parse(GetConfiguration("levelUp:intelligence")),
+                    };
+                }
+                return _levelUp;
             }
+        }
+
+        private string GetConfiguration(string key)
+        {
+            _logger.LogDebug($"Reading configuration key {key} in {configurationFile}.");
+            return _configuration[key];
         }
     }
 }
