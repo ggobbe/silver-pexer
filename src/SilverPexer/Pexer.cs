@@ -90,13 +90,13 @@ namespace SilverPexer
                     LevelUp();
                 }
 
-                if (IsNewMessagePresent())
+                if (IsOtherPlayerPresent())
                 {
                     GoToSleep();
                     return;
                 }
 
-                if (IsOtherPlayerPresent())
+                if (_configuration.GoToSleepWhenMessage && IsNewMessagePresent())
                 {
                     GoToSleep();
                     return;
