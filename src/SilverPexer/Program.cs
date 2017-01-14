@@ -11,7 +11,6 @@ namespace SilverPexer
         public static void Main(string[] args)
         {
             ILoggerFactory loggerFactory = new LoggerFactory()
-                .AddDebug()
                 .AddNLog();
             ILogger logger = loggerFactory.CreateLogger<Program>();
 
@@ -31,7 +30,7 @@ namespace SilverPexer
 
             using (var driver = new ChromeDriver(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "drivers")))
             {
-                var pexer = new Pexer(configuration, driver);
+                var pexer = new Pexer(configuration, driver, logger);
 
                 pexer.Login();
                 while (pexer.Continue)

@@ -50,7 +50,7 @@ namespace SilverPexer
         {
             get
             {
-                if (_pathToInn != null)
+                if (_pathToInn == null)
                 {
                     var path = GetConfiguration("pathToInn");
                     _pathToInn = path.Split(',').Select(e => e.Trim());
