@@ -6,13 +6,18 @@
     "copyToOutput": {
       "includeFiles": [
         "./drivers/chromedriver.exe",
-        "appsettings.json"
+        "appsettings.json",
+        "nlog.config"
       ]
     }
   },
   "dependencies": {
     "Microsoft.Extensions.Configuration": "1.1.0",
     "Microsoft.Extensions.Configuration.Json": "1.1.0",
+    "Microsoft.Extensions.Logging": "1.1.0",
+    "Microsoft.Extensions.Logging.Console": "1.1.0",
+    "Microsoft.Extensions.Logging.Debug": "1.1.0",
+    "NLog.Extensions.Logging": "1.0.0-*",
     "Selenium.Support": "3.0.1",
     "Selenium.WebDriver": "3.0.1",
     "Selenium.WebDriver.ChromeDriver": "2.27.0"

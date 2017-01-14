@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using Microsoft.Extensions.Logging;
+using NLog.Extensions.Logging;
 using OpenQA.Selenium.Chrome;
 
 namespace SilverPexer
@@ -8,7 +10,12 @@ namespace SilverPexer
     {
         public static void Main(string[] args)
         {
-            var configuration = new Configuration();
+            ILoggerFactory loggerFactory = new LoggerFactory()
+                .AddDebug()
+                .AddNLog();
+            ILogger logger = loggerFactory.CreateLogger<Program>();
+
+            var configuration = new Configuration(logger);
 
             if (string.IsNullOrWhiteSpace(configuration.Username))
             {
