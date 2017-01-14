@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
+using Microsoft.Extensions.Logging;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Interactions;
@@ -20,10 +21,13 @@ namespace SilverPexer
 
         private readonly ChromeDriver _driver;
 
+        private readonly ILogger _logger;
+
         private int _actionCount = 0;
 
-        public Pexer(Configuration configuration, ChromeDriver driver)
+        public Pexer(Configuration configuration, ChromeDriver driver, ILogger logger)
         {
+            _logger = logger;
             _random = new Random();
             _configuration = configuration;
             _driver = driver;
@@ -32,6 +36,7 @@ namespace SilverPexer
 
         public void Login()
         {
+            _logger.LogInformation($"Logging user {_configuration.Username}");
             _driver.Url = BaseUrl;
             _driver.FindElementByName("login").SendKeys(_configuration.Username);
             _driver.FindElementByName("pass").SendKeys(_configuration.Password);
@@ -115,15 +120,17 @@ namespace SilverPexer
 
         private void GoToSleep()
         {
+            _logger.LogInformation("Going to sleep");
             NavigateToMap();
             foreach (var cell in _configuration.PathToInn)
             {
                 ClickOnMap(cell.Trim());
             }
+
             _driver.Url = $"{BaseUrl}/auberge.php";
             if (!_driver.Url.Contains("auberge.php"))
             {
-                Console.WriteLine("Could not open auberge.php");
+                _logger.LogError("Could not open auberge.php");
                 return;
             }
 
@@ -138,11 +145,17 @@ namespace SilverPexer
 
         private bool IsOtherPlayerPresent()
         {
-            return _driver.FindElements(By.CssSelector("a[href^=\"fight.php?type=user\"]")).Any();
+            var spotted = _driver.FindElements(By.CssSelector("a[href^=\"fight.php?type=user\"]")).Any();
+            if (spotted)
+            {
+                _logger.LogInformation("Another player was spotted");
+            }
+            return spotted;
         }
 
         private void ClickOnMap(string coordinates)
         {
+            _logger.LogInformation($"Clicking on map at coordinates {coordinates}");
             var regex = new Regex(@"^(?<latitude>[A-Z])(?<longitude>[1-3]?[0-9])$");
 
             if (!regex.IsMatch(coordinates))
@@ -156,7 +169,7 @@ namespace SilverPexer
             var x = int.Parse(match.Groups["longitude"].Value) - 1;
             var y = match.Groups["latitude"].Value[0] - (int)'A';
 
-            Thread.Sleep(TimeSpan.FromSeconds(1)); // wait for flash to load the map before to click on it
+            Thread.Sleep(TimeSpan.FromMilliseconds(500)); // wait for flash to load the map before to click on it
             Actions builder = new Actions(_driver);
             var map = _driver.FindElementByCssSelector("td[colspan=\"30\"][rowspan=\"12\"]");
             var xPos = (x * cellWidth) + (cellWidth / 2);
@@ -172,7 +185,12 @@ namespace SilverPexer
 
         private bool IsNewMessagePresent()
         {
-            return _driver.FindElements(By.CssSelector("[href=\"/messages.php\"]")).Count > 1;
+            var received = _driver.FindElements(By.CssSelector("[href=\"/messages.php\"]")).Count > 1;
+            if (received)
+            {
+                _logger.LogInformation("Message received");
+            }
+            return received;
         }
 
         private bool IsLootPresent()
@@ -182,6 +200,7 @@ namespace SilverPexer
 
         private void LevelUp()
         {
+            _logger.LogInformation("Level up");
             int pointsLeft;
             if (!int.TryParse(_driver.FindElementByName("left").GetAttribute("value"), out pointsLeft) || pointsLeft != _configuration.LevelUp.Total)
             {
