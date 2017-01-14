@@ -14,6 +14,7 @@ namespace SilverPexer
         private string _timeToSleep;
         private string _username;
         private Stats _levelUp;
+        private int? _actionPoints;
 
         public Configuration()
         {
@@ -50,6 +51,12 @@ namespace SilverPexer
         {
             get { return _timeToSleep ?? _configuration["timeToSleep"]; }
             set { _timeToSleep = value; }
+        }
+
+        public int? ActionPoints
+        {
+            get { return _actionPoints ?? int.Parse(_configuration["actionPoints"]); }
+            set { _actionPoints = value; }
         }
 
         public Stats LevelUp

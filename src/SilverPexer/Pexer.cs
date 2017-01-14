@@ -20,6 +20,8 @@ namespace SilverPexer
 
         private readonly ChromeDriver _driver;
 
+        private int _actionCount = 0;
+
         public Pexer(Configuration configuration, ChromeDriver driver)
         {
             _random = new Random();
@@ -41,7 +43,7 @@ namespace SilverPexer
             while (Continue && IsMonsterPresent())
             {
                 AttackMonster();
-                Thread.Sleep(_random.Next(100, 1000));
+                Thread.Sleep(_random.Next(100, 500));
             }
         }
 
@@ -69,6 +71,13 @@ namespace SilverPexer
                 _driver.FindElementByCssSelector("input[src=\"systeme/mag17.gif\"]").Click();
                 killed = _driver.FindElementByClassName("descriptiontitle").Text.Contains("est tué") ||
                          (!_driver.Url.Contains("fight.php?type=monster") && !_driver.Url.Contains("sort.php"));
+                _actionCount += 2;
+            }
+
+            if (_actionCount >= _configuration.ActionPoints)
+            {
+                GoToSleep();
+                Continue = false;
             }
         }
 
@@ -99,7 +108,7 @@ namespace SilverPexer
                     continue;
                 }
 
-                Thread.Sleep(_random.Next(250, 2500));
+                Thread.Sleep(_random.Next(250, 1000));
                 NavigateToMap(force: true);
             }
         }
