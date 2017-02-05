@@ -121,9 +121,10 @@ namespace SilverPexer
         private void GoToSleep()
         {
             _logger.LogInformation("Going to sleep");
-            NavigateToMap();
+
             foreach (var cell in _configuration.PathToInn)
             {
+                NavigateToMap();
                 ClickOnMap(cell.Trim());
             }
 
@@ -240,6 +241,11 @@ namespace SilverPexer
             if (force || !_driver.Url.Contains("map.php"))
             {
                 _driver.Url = $"{BaseUrl}/map.php";
+
+                if (_driver.Url.Contains("levelup.php"))
+                {
+                    LevelUp();
+                }
             }
         }
     }
