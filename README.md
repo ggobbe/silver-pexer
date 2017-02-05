@@ -23,6 +23,11 @@ You can edit `.\bin\appsettings.json` to change the following settings :
   - `strength` The amount of points to place in strength
   - `agility` The amount of points to place in agility
   - `intelligence` The amount of points to place in intelligence
+- `spell` The spell number to use for attacking monsters (e.g. Cone de froid image src is systeme/mag`17`.gif, hence the value should be **17**)
+- `potion` Potion to drink
+  - `id` The potion number (e.g. systeme/obj`303`.gif is the image for a mana potion, hence the value should be **303**)
+  - `amount` The amount of potions to drink
+  - `hits` The amount of hits to do before to drink the amount of potions specified
 
 ## System Requirements
 

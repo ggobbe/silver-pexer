@@ -96,6 +96,11 @@ namespace SilverPexer
 
         public void DrinkPotion()
         {
+            if(string.IsNullOrEmpty(_configuration.Potion.Id))
+            {
+                return;
+            }
+            
             _driver.Url = $"{BaseUrl}/myperso.php";
 
             if (_driver.Url.Contains("levelup.php"))
