@@ -25,6 +25,8 @@ namespace SilverPexer
 
         private int _actionCount = 0;
 
+        private int _hitsCount = 0;
+
         public Pexer(Configuration configuration, ChromeDriver driver, ILogger logger)
         {
             _logger = logger;
@@ -73,10 +75,16 @@ namespace SilverPexer
             var killed = false;
             while (!killed)
             {
-                _driver.FindElementByCssSelector("input[src=\"systeme/mag17.gif\"]").Click();
+                _driver.FindElementByCssSelector($"input[src^=\"systeme/mag{_configuration.Spell}.\"]").Click();
                 killed = _driver.FindElementByClassName("descriptiontitle").Text.Contains("est tué") ||
                          (!_driver.Url.Contains("fight.php?type=monster") && !_driver.Url.Contains("sort.php"));
                 _actionCount += 2;
+                _hitsCount++;
+
+                if (_hitsCount >= _configuration.Potion.Hits)
+                {
+                    DrinkPotion();
+                }
             }
 
             if (_actionCount >= _configuration.ActionPoints)
@@ -84,6 +92,24 @@ namespace SilverPexer
                 GoToSleep();
                 Continue = false;
             }
+        }
+
+        public void DrinkPotion()
+        {
+            _driver.Url = $"{BaseUrl}/myperso.php";
+
+            if (_driver.Url.Contains("levelup.php"))
+            {
+                LevelUp();
+                _driver.Url = $"{BaseUrl}/myperso.php";
+            }
+
+            for (int i = 0; i < _configuration.Potion.Amount; i++)
+            {
+                var potionImage = _driver.FindElementByCssSelector($"img[src^=\"systeme/obj{_configuration.Potion.Id}.\"");
+                potionImage.Click();
+            }
+            _hitsCount = 0;
         }
 
         public void WaitForMonsters()
