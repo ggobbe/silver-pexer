@@ -21,6 +21,8 @@ namespace SilverPexer
         private int? _actionPoints;
         private bool? _goToSleepWhenMessage;
         private Stats _levelUp;
+        private string _spell;
+        private Potion _potion;
 
         public Configuration(ILogger logger)
         {
@@ -96,6 +98,28 @@ namespace SilverPexer
                     };
                 }
                 return _levelUp;
+            }
+        }
+
+        public string Spell
+        {
+            get { return _spell ?? (_spell = GetConfiguration("spell")); }
+        }
+
+        public Potion Potion
+        {
+            get
+            {
+                if (_potion == null)
+                {
+                    _potion = new Potion()
+                    {
+                        Id = GetConfiguration("potion:id"),
+                        Amount = int.Parse(GetConfiguration("potion:amount")),
+                        Hits = int.Parse(GetConfiguration("potion:hits"))
+                    };
+                }
+                return _potion;
             }
         }
 
