@@ -14,30 +14,37 @@ namespace SilverPexer
                 .AddNLog();
             ILogger logger = loggerFactory.CreateLogger<Program>();
 
-            var configuration = new Configuration(logger);
-
-            if (string.IsNullOrWhiteSpace(configuration.Username))
+            try
             {
-                Console.Write("Username: ");
-                configuration.Username = Console.ReadLine();
-            }
+                var configuration = new Configuration(logger);
 
-            if (string.IsNullOrWhiteSpace(configuration.Password))
-            {
-                Console.Write("Password: ");
-                configuration.Password = ConsoleHelper.ReadPassword();
-            }
-
-            using (var driver = new ChromeDriver(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "drivers")))
-            {
-                var pexer = new Pexer(configuration, driver, logger);
-
-                pexer.Login();
-                while (pexer.Continue)
+                if (string.IsNullOrWhiteSpace(configuration.Username))
                 {
-                    pexer.KillAllMonsters();
-                    pexer.WaitForMonsters();
+                    Console.Write("Username: ");
+                    configuration.Username = Console.ReadLine();
                 }
+
+                if (string.IsNullOrWhiteSpace(configuration.Password))
+                {
+                    Console.Write("Password: ");
+                    configuration.Password = ConsoleHelper.ReadPassword();
+                }
+
+                using (var driver = new ChromeDriver(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "drivers")))
+                {
+                    var pexer = new Pexer(configuration, driver, logger);
+
+                    pexer.Login();
+                    while (pexer.Continue)
+                    {
+                        pexer.KillAllMonsters();
+                        pexer.WaitForMonsters();
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                logger.LogCritical($"An error has occured: {e.Message}\n{e.StackTrace}");
             }
         }
     }
