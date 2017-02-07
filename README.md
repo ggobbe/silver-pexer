@@ -15,7 +15,8 @@ You can edit `.\bin\appsettings.json` to change the following settings :
 - `username` Your username (optional)
 - `password` Your password (optional)
 - `actionPoints` The amount of action points to use (before to go to sleep)
-- `pathToInn` The path to the closest inn (used to go to sleep)
+- `sleepType` The type of place you want to sleep in: _forteresse_ is `Camp`, _auberge_ is `Inn`
+- `pathToSleep` The path to the closest inn or camp (used to go to sleep)
 - `timeToSleep` The time to sleep in the inn (in hours)
 - `goToSleepWhenMessage` To go to sleep when a message is received (true or false)
 - `levelUp` Stats distribution on level up

@@ -148,23 +148,36 @@ namespace SilverPexer
             _logger.LogInformation("Going to sleep");
             NavigateTo("map.php", force: true);
 
-            foreach (var cell in _configuration.PathToInn)
+            foreach (var cell in _configuration.PathToSleep)
             {
                 ClickOnMap(cell.Trim());
                 NavigateTo("map.php", force: false);
             }
 
-            NavigateTo("auberge.php");
-            if (!_driver.Url.Contains("auberge.php"))
+            switch (_configuration.SleepType)
             {
-                _logger.LogError("Could not open auberge.php");
-                return;
+                default:
+                case SleepType.Inn:
+                    NavigateTo("auberge.php");
+                    if (!_driver.Url.Contains("auberge.php"))
+                    {
+                        _logger.LogError("Could not open auberge.php");
+                        return;
+                    }
+                    var duree = _driver.FindElementByName("duree");
+                    duree.Clear();
+                    duree.SendKeys(_configuration.TimeToSleep);
+                    _driver.FindElementByCssSelector("input[name =\"Submit\"][value=\"m'endormir\"]").Click();
+                    break;
+                case SleepType.Camp:
+                    NavigateTo("camp.php?map=enter");
+                    if (!_driver.Url.Contains("camp.php"))
+                    {
+                        _logger.LogError("Could not open camp.php");
+                        return;
+                    }
+                    break;
             }
-
-            var duree = _driver.FindElementByName("duree");
-            duree.Clear();
-            duree.SendKeys(_configuration.TimeToSleep);
-            _driver.FindElementByCssSelector("input[name =\"Submit\"][value=\"m'endormir\"]").Click();
 
             // Stop looping
             Continue = false;
