@@ -56,19 +56,13 @@ namespace SilverPexer
 
         public bool IsMonsterPresent()
         {
-            NavigateToMap();
+            NavigateTo("map.php", force: false);
             return _driver.FindElementsByCssSelector("a[href^=\"fight.php?type=monster\"]").Any();
         }
 
         public void AttackMonster()
         {
-            NavigateToMap();
-
-            if (IsOtherPlayerPresent())
-            {
-                GoToSleep();
-                return;
-            }
+            NavigateTo("map.php", force: false);
 
             _driver.FindElementByCssSelector("a[href^=\"fight.php?type=monster\"]").Click();
 
@@ -76,8 +70,6 @@ namespace SilverPexer
             while (!killed)
             {
                 _driver.FindElementByCssSelector($"input[src^=\"systeme/mag{_configuration.Spell}.\"]").Click();
-                killed = _driver.FindElementByClassName("descriptiontitle").Text.Contains("est tué") ||
-                         (!_driver.Url.Contains("fight.php?type=monster") && !_driver.Url.Contains("sort.php"));
                 _actionCount += 2;
                 _hitsCount++;
 
@@ -85,29 +77,48 @@ namespace SilverPexer
                 {
                     DrinkPotion();
                 }
+
+                killed = (!_driver.Url.Contains("fight.php?type=monster") && !_driver.Url.Contains("sort.php"))
+                            || _driver.FindElementByClassName("descriptiontitle").Text.Contains("est tué");
             }
 
             if (_actionCount >= _configuration.ActionPoints)
             {
                 GoToSleep();
-                Continue = false;
             }
         }
 
-        public void DrinkPotion()
+        private void NavigateTo(string page, bool force = true)
         {
-            if(string.IsNullOrEmpty(_configuration.Potion.Id))
+            if (force || !_driver.Url.Contains(page))
             {
-                return;
+                _driver.Url = $"{BaseUrl}/{page}";
             }
-            
-            _driver.Url = $"{BaseUrl}/myperso.php";
 
             if (_driver.Url.Contains("levelup.php"))
             {
                 LevelUp();
-                _driver.Url = $"{BaseUrl}/myperso.php";
+                _driver.Url = $"{BaseUrl}/{page}";
             }
+
+            if (_driver.Url.Contains("map.php"))
+            {
+                if (IsOtherPlayerPresent() || (_configuration.GoToSleepWhenMessage && IsNewMessagePresent()))
+                {
+                    GoToSleep();
+                    return;
+                }
+            }
+        }
+
+        private void DrinkPotion()
+        {
+            if (string.IsNullOrEmpty(_configuration.Potion.Id))
+            {
+                return;
+            }
+
+            NavigateTo("myperso.php");
 
             for (int i = 0; i < _configuration.Potion.Amount; i++)
             {
@@ -121,23 +132,6 @@ namespace SilverPexer
         {
             while (Continue && !IsMonsterPresent())
             {
-                if (_driver.Url.Contains("levelup.php"))
-                {
-                    LevelUp();
-                }
-
-                if (IsOtherPlayerPresent())
-                {
-                    GoToSleep();
-                    return;
-                }
-
-                if (_configuration.GoToSleepWhenMessage && IsNewMessagePresent())
-                {
-                    GoToSleep();
-                    return;
-                }
-
                 if (IsLootPresent())
                 {
                     GrabLoot();
@@ -145,21 +139,22 @@ namespace SilverPexer
                 }
 
                 Thread.Sleep(_random.Next(250, 1000));
-                NavigateToMap(force: true);
+                NavigateTo("map.php", force: true);
             }
         }
 
         private void GoToSleep()
         {
             _logger.LogInformation("Going to sleep");
+            NavigateTo("map.php", force: true);
 
             foreach (var cell in _configuration.PathToInn)
             {
-                NavigateToMap();
                 ClickOnMap(cell.Trim());
+                NavigateTo("map.php", force: false);
             }
 
-            _driver.Url = $"{BaseUrl}/auberge.php";
+            NavigateTo("auberge.php");
             if (!_driver.Url.Contains("auberge.php"))
             {
                 _logger.LogError("Could not open auberge.php");
@@ -187,6 +182,7 @@ namespace SilverPexer
 
         private void ClickOnMap(string coordinates)
         {
+            NavigateTo("map.php", force: false);
             _logger.LogInformation($"Clicking on map at coordinates {coordinates}");
             var regex = new Regex(@"^(?<latitude>[A-Z])(?<longitude>[1-3]?[0-9])$");
 
@@ -212,6 +208,7 @@ namespace SilverPexer
 
         private void GrabLoot()
         {
+            NavigateTo("map.php", force: false);
             _driver.FindElementByCssSelector("input[src^=\"systeme/obj\"]").Click();
         }
 
@@ -227,6 +224,7 @@ namespace SilverPexer
 
         private bool IsLootPresent()
         {
+            NavigateTo("map.php", force: false);
             return _driver.FindElements(By.CssSelector("input[src^=\"systeme/obj\"]")).Any();
         }
 
@@ -265,19 +263,6 @@ namespace SilverPexer
             }
 
             _driver.FindElementByName("Submit").Click();
-        }
-
-        private void NavigateToMap(bool force = false)
-        {
-            if (force || !_driver.Url.Contains("map.php"))
-            {
-                _driver.Url = $"{BaseUrl}/map.php";
-
-                if (_driver.Url.Contains("levelup.php"))
-                {
-                    LevelUp();
-                }
-            }
         }
     }
 }
