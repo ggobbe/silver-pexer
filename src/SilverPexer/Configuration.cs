@@ -15,7 +15,8 @@ namespace SilverPexer
         private readonly ILogger _logger;
 
         private string _password;
-        private IEnumerable<string> _pathToInn;
+        private IEnumerable<string> _pathToSleep;
+        private SleepType? _sleepType;
         private string _timeToSleep;
         private string _username;
         private int? _actionPoints;
@@ -48,16 +49,24 @@ namespace SilverPexer
             set { _password = value; }
         }
 
-        public IEnumerable<string> PathToInn
+        public SleepType? SleepType
         {
             get
             {
-                if (_pathToInn == null)
+                return _sleepType ?? (_sleepType = (SleepType)Enum.Parse(typeof(SleepType), GetConfiguration("sleepType")));
+            }
+        }
+
+        public IEnumerable<string> PathToSleep
+        {
+            get
+            {
+                if (_pathToSleep == null)
                 {
-                    var path = GetConfiguration("pathToInn");
-                    _pathToInn = path.Split(',').Select(e => e.Trim());
+                    var path = GetConfiguration("pathToSleep");
+                    _pathToSleep = path.Split(',').Select(e => e.Trim());
                 }
-                return _pathToInn;
+                return _pathToSleep;
             }
         }
 
