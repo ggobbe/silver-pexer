@@ -120,6 +120,12 @@ namespace SilverPexer
 
             NavigateTo("myperso.php");
 
+            // Level up could reset the hitsCount
+            if(_hitsCount == 0) 
+            {
+                return;
+            }
+
             for (int i = 0; i < _configuration.Potion.Amount; i++)
             {
                 var potionImage = _driver.FindElementByCssSelector($"img[src^=\"systeme/obj{_configuration.Potion.Id}.\"");
@@ -276,6 +282,9 @@ namespace SilverPexer
             }
 
             _driver.FindElementByName("Submit").Click();
+
+            // Reset hits count as level up restore mana and health
+            _hitsCount = 0;
         }
     }
 }
