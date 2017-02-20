@@ -34,7 +34,7 @@ namespace SilverPexer
             _logger.LogDebug("Building configuration");
 
             var builder = new ConfigurationBuilder()
-                .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+                .SetBasePath(System.AppContext.BaseDirectory)
                 .AddJsonFile(configurationFile, false, false);
 
             _configuration = builder.Build();
