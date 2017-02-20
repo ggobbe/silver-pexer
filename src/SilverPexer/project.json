@@ -16,11 +16,17 @@
     "Microsoft.Extensions.Configuration.Json": "1.1.0",
     "Microsoft.Extensions.Logging": "1.1.0",
     "NLog.Extensions.Logging": "1.0.0-*",
-    "Selenium.Support": "3.0.1",
-    "Selenium.WebDriver": "3.0.1",
-    "Selenium.WebDriver.ChromeDriver": "2.27.0"
+    "CoreCompat.Selenium.WebDriver": "2.54.0-beta002"
   },
   "frameworks": {
-    "net462": {}
+    "netcoreapp1.1": {
+      "dependencies": {
+        "Microsoft.NETCore.App": {
+          "type": "platform",
+          "version": "1.1.0"
+        }
+      },
+      "imports": "dnxcore50"
+    }
   }
 }

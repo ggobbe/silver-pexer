@@ -30,7 +30,7 @@ namespace SilverPexer
                     configuration.Password = ConsoleHelper.ReadPassword();
                 }
 
-                using (var driver = new ChromeDriver(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "drivers")))
+                using (var driver = new ChromeDriver(Path.Combine(System.AppContext.BaseDirectory, "drivers")))
                 {
                     var pexer = new Pexer(configuration, driver, logger);
 
