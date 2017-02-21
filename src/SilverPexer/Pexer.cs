@@ -126,11 +126,18 @@ namespace SilverPexer
                 return;
             }
 
-            for (int i = 0; i < _configuration.Potion.Amount; i++)
+            // Find potion container
+            var potion = _driver.FindElementByCssSelector($"img[src^=\"systeme/obj{_configuration.Potion.Id}.\"");
+            for(int j = 0; j < 4; j++)
             {
-                var potionImage = _driver.FindElementByCssSelector($"img[src^=\"systeme/obj{_configuration.Potion.Id}.\"");
-                potionImage.Click();
+                potion = potion.FindElement(By.XPath(".."));
             }
+
+            // Drink the right amount of potions in one hit
+            potion.FindElement(By.CssSelector("input[name=\"nbr\"]")).Clear();
+            potion.FindElement(By.CssSelector("input[name=\"nbr\"]")).SendKeys(_configuration.Potion.Amount.ToString());
+            potion.FindElement(By.CssSelector("input[name=\"Submit2\"]")).Click();
+                
             _hitsCount = 0;
         }
 
