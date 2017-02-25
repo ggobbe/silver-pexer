@@ -257,3 +257,6 @@ paket-files/
 # Visual Studio solution files
 *.sln
 *.xproj
+
+# Dotnet Core build files
+.bin
