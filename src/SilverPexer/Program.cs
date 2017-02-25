@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Runtime.InteropServices;
 using Microsoft.Extensions.Logging;
 using NLog.Extensions.Logging;
 using OpenQA.Selenium.Chrome;
@@ -30,7 +31,8 @@ namespace SilverPexer
                     configuration.Password = ConsoleHelper.ReadPassword();
                 }
 
-                using (var driver = new ChromeDriver(Path.Combine(System.AppContext.BaseDirectory, "drivers")))
+                string driverOSFolder = GetDriverOSFolder();
+                using (var driver = new ChromeDriver(Path.Combine(System.AppContext.BaseDirectory, "drivers", driverOSFolder)))
                 {
                     var pexer = new Pexer(configuration, driver, logger);
 
@@ -46,6 +48,23 @@ namespace SilverPexer
             {
                 logger.LogCritical($"An error has occured: {e.Message}\n{e.StackTrace}");
             }
+        }
+
+        private static string GetDriverOSFolder()
+        {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                return "windows";
+            }
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                return "osx";
+            }
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                return "linux";
+            }
+            throw new NotSupportedException("Operating system not supported");
         }
     }
 }

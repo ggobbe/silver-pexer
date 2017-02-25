@@ -5,8 +5,9 @@
     "emitEntryPoint": true,
     "copyToOutput": {
       "includeFiles": [
-        "./drivers/chromedriver.exe",
-        "./drivers/chromedriver",
+        "./drivers/windows/chromedriver.exe",
+        "./drivers/linux/chromedriver",
+        "./drivers/osx/chromedriver",
         "appsettings.json",
         "nlog.config"
       ]
