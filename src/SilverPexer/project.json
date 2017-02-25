@@ -6,6 +6,7 @@
     "copyToOutput": {
       "includeFiles": [
         "./drivers/chromedriver.exe",
+        "./drivers/chromedriver",
         "appsettings.json",
         "nlog.config"
       ]
