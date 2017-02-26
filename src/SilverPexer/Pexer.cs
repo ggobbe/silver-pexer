@@ -57,7 +57,7 @@ namespace SilverPexer
         public bool IsMonsterPresent()
         {
             NavigateTo("map.php", force: false);
-            return _driver.FindElementsByCssSelector("a[href^=\"fight.php?type=monster\"]").Any();
+            return _driver.FindElementsByCssSelector($"img[src^=\"systeme/monster{_configuration.Monster}.\"]").Any();
         }
 
         public void AttackMonster()
@@ -69,7 +69,11 @@ namespace SilverPexer
             var killed = false;
             while (!killed)
             {
-                _driver.FindElementByCssSelector($"input[src^=\"systeme/mag{_configuration.Spell}.\"]").Click();
+                if (_configuration.Spell.Equals("0")) {
+                   _driver.FindElementByCssSelector("a[href^=\"?action=fight&attack=\"]").Click();
+                } else {
+                    _driver.FindElementByCssSelector($"input[src^=\"systeme/mag{_configuration.Spell}.\"]").Click();
+                }
                 _actionCount += 2;
                 _hitsCount++;
 
@@ -103,7 +107,7 @@ namespace SilverPexer
 
             if (_driver.Url.Contains("map.php"))
             {
-                if (IsOtherPlayerPresent() || (_configuration.GoToSleepWhenMessage && IsNewMessagePresent()))
+                if ((_configuration.GoToSleepWhenPlayer && IsOtherPlayerPresent()) || (_configuration.GoToSleepWhenMessage && IsNewMessagePresent()))
                 {
                     GoToSleep();
                     return;
@@ -145,7 +149,7 @@ namespace SilverPexer
         {
             while (Continue && !IsMonsterPresent())
             {
-                if (IsLootPresent())
+                if (_configuration.GrabLoot && IsLootPresent())
                 {
                     GrabLoot();
                     continue;

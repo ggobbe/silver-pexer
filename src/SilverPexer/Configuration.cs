@@ -21,8 +21,11 @@ namespace SilverPexer
         private string _username;
         private int? _actionPoints;
         private bool? _goToSleepWhenMessage;
+        private bool? _goToSleepWhenPlayer;
+        private bool? _grabLoot;
         private Stats _levelUp;
         private string _spell;
+        private string _monster;
         private Potion _potion;
 
         public Configuration(ILogger logger)
@@ -92,6 +95,30 @@ namespace SilverPexer
             }
         }
 
+        public bool GoToSleepWhenPlayer
+        {
+            get
+            {
+                if (!_goToSleepWhenPlayer.HasValue)
+                {
+                    _goToSleepWhenPlayer = bool.Parse(GetConfiguration("goToSleepWhenPlayer"));
+                }
+                return _goToSleepWhenPlayer.Value;
+            }
+        }
+
+        public bool GrabLoot
+        {
+            get
+            {
+                if (!_grabLoot.HasValue)
+                {
+                    _grabLoot = bool.Parse(GetConfiguration("grabLoot"));
+                }
+                return _grabLoot.Value;
+            }
+        }
+
         public Stats LevelUp
         {
             get
@@ -115,6 +142,11 @@ namespace SilverPexer
             get { return _spell ?? (_spell = GetConfiguration("spell")); }
         }
 
+        public string Monster
+        {
+            get { return _monster ?? (_monster = GetConfiguration("monster")); }
+        }
+        
         public Potion Potion
         {
             get
