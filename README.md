@@ -24,7 +24,8 @@ You can edit `.\bin\appsettings.json` to change the following settings :
   - `strength` The amount of points to place in strength
   - `agility` The amount of points to place in agility
   - `intelligence` The amount of points to place in intelligence
-- `spell` The spell number to use for attacking monsters (e.g. Cone de froid image src is systeme/mag`17`.gif, hence the value should be **17**)
+- `spell` The spell number to use for attacking monsters (e.g. Cone de froid image src is systeme/mag`17`.gif, hence the value should be **17**, `0` for swichting to warrior mode)
+- `monster` The monster ID to use for attacking monsters (e.g. Leviathan de Corail src is systeme/monster`286`.gif, hence the value should be **286**)
 - `potion` Potion to drink
   - `id` The potion number (e.g. systeme/obj`303`.gif is the image for a mana potion, hence the value should be **303**)
   - `amount` The amount of potions to drink
