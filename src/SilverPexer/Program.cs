@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Console;
 using OpenQA.Selenium.Chrome;
 using System;
 using System.IO;
@@ -10,7 +11,7 @@ namespace SilverPexer
     {
         static void Main(string[] args)
         {
-            ILoggerFactory loggerFactory = new LoggerFactory();
+            ILoggerFactory loggerFactory = new LoggerFactory().AddConsole();
             var logger = loggerFactory.CreateLogger<Program>();
 
             try
