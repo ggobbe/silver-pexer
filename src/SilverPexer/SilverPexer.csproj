@@ -9,11 +9,6 @@
     <RuntimeFrameworkVersion>1.1.1</RuntimeFrameworkVersion>
   </PropertyGroup>
   <ItemGroup>
-    <None Update=".\drivers\windows\chromedriver.exe;.\drivers\linux\chromedriver;.\drivers\osx\chromedriver;appsettings.json;nlog.config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="1.1.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="1.1.1" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="1.1.1" />
@@ -21,4 +16,18 @@
     <PackageReference Include="NLog.Extensions.Logging" Version="1.0.0-*" />
     <PackageReference Include="CoreCompat.Selenium.WebDriver" Version="3.2.0-beta003" />
   </ItemGroup>
+    <ItemGroup> 
+    <None Update="appsettings.json"> 
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory> 
+    </None> 
+    <None Update="drivers\linux\chromedriver"> 
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory> 
+    </None> 
+    <None Update="drivers\osx\chromedriver"> 
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory> 
+    </None> 
+    <None Update="drivers\windows\chromedriver.exe"> 
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory> 
+    </None> 
+  </ItemGroup> 
 </Project>
