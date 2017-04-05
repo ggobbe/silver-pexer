@@ -2,7 +2,6 @@
 using System.IO;
 using System.Runtime.InteropServices;
 using Microsoft.Extensions.Logging;
-using NLog.Extensions.Logging;
 using OpenQA.Selenium.Chrome;
 
 namespace SilverPexer
