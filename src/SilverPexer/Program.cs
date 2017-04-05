@@ -11,7 +11,7 @@ namespace SilverPexer
     {
         static void Main(string[] args)
         {
-            ILoggerFactory loggerFactory = new LoggerFactory();
+            ILoggerFactory loggerFactory = new LoggerFactory().AddConsole();
             var logger = loggerFactory.CreateLogger<Program>();
 
             try
