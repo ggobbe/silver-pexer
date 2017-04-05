@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 
 namespace SilverPexer
 {
@@ -34,7 +34,7 @@ namespace SilverPexer
             _logger.LogDebug("Building configuration");
 
             var builder = new ConfigurationBuilder()
-                .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+                .SetBasePath(AppContext.BaseDirectory)
                 .AddJsonFile(configurationFile, false, false);
 
             _configuration = builder.Build();
@@ -146,7 +146,7 @@ namespace SilverPexer
         {
             get { return _monster ?? (_monster = GetConfiguration("monster")); }
         }
-        
+
         public Potion Potion
         {
             get
