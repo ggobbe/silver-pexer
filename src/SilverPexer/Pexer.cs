@@ -69,9 +69,12 @@ namespace SilverPexer
             var killed = false;
             while (!killed)
             {
-                if (_configuration.Spell.Equals("0")) {
-                   _driver.FindElementByCssSelector("a[href^=\"?action=fight&attack=\"]").Click();
-                } else {
+                if (_configuration.Spell.Equals("0"))
+                {
+                    _driver.FindElementByCssSelector("a[href^=\"?action=fight&attack=\"]").Click();
+                }
+                else
+                {
                     _driver.FindElementByCssSelector($"input[src^=\"systeme/mag{_configuration.Spell}.\"]").Click();
                 }
                 _actionCount += 2;
@@ -125,14 +128,14 @@ namespace SilverPexer
             NavigateTo("myperso.php");
 
             // Level up could reset the hitsCount
-            if(_hitsCount == 0) 
+            if (_hitsCount == 0)
             {
                 return;
             }
 
             // Find potion container
             var potion = _driver.FindElementByCssSelector($"img[src^=\"systeme/obj{_configuration.Potion.Id}.\"");
-            for(int j = 0; j < 4; j++)
+            for (int j = 0; j < 4; j++)
             {
                 potion = potion.FindElement(By.XPath(".."));
             }
@@ -141,7 +144,7 @@ namespace SilverPexer
             potion.FindElement(By.CssSelector("input[name=\"nbr\"]")).Clear();
             potion.FindElement(By.CssSelector("input[name=\"nbr\"]")).SendKeys(_configuration.Potion.Amount.ToString());
             potion.FindElement(By.CssSelector("input[name=\"Submit2\"]")).Click();
-                
+
             _hitsCount = 0;
         }
 

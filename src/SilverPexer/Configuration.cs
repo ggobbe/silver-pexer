@@ -34,7 +34,7 @@ namespace SilverPexer
             _logger.LogDebug("Building configuration");
 
             var builder = new ConfigurationBuilder()
-                .SetBasePath(System.AppContext.BaseDirectory)
+                .SetBasePath(AppContext.BaseDirectory)
                 .AddJsonFile(configurationFile, false, false);
 
             _configuration = builder.Build();
@@ -146,7 +146,7 @@ namespace SilverPexer
         {
             get { return _monster ?? (_monster = GetConfiguration("monster")); }
         }
-        
+
         public Potion Potion
         {
             get

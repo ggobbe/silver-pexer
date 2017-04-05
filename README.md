@@ -19,6 +19,8 @@ You can edit `.\bin\appsettings.json` to change the following settings :
 - `pathToSleep` The path to the closest inn or camp (used to go to sleep)
 - `timeToSleep` The time to sleep in the inn (in hours)
 - `goToSleepWhenMessage` To go to sleep when a message is received (true or false)
+- `goToSleepWhenPlayer` To go to sleep when another player is spotted (true or false), 
+- `grabLoot`: To grab the loot on the ground (true or false), 
 - `levelUp` Stats distribution on level up
   - `constitution` The amount of points to place in constitution
   - `strength` The amount of points to place in strength
@@ -37,3 +39,6 @@ You can edit `.\bin\appsettings.json` to change the following settings :
 - .NET Framework 4.6.2
 - .NET Core 1.1+
 - Google Chrome 55+
+
+## Linux and MacOS support 
+You can fetch the "feature/unix-support" branch but it only works with .NET Core 1.0 so far and has problems running on Windows. 

@@ -7,13 +7,12 @@ using OpenQA.Selenium.Chrome;
 
 namespace SilverPexer
 {
-    public class Program
+    class Program
     {
-        public static void Main(string[] args)
+        static void Main(string[] args)
         {
-            ILoggerFactory loggerFactory = new LoggerFactory()
-                .AddNLog();
-            ILogger logger = loggerFactory.CreateLogger<Program>();
+            ILoggerFactory loggerFactory = new LoggerFactory();
+            var logger = loggerFactory.CreateLogger<Program>();
 
             try
             {
@@ -31,8 +30,8 @@ namespace SilverPexer
                     configuration.Password = ConsoleHelper.ReadPassword();
                 }
 
-                string driverOSFolder = GetDriverOSFolder();
-                using (var driver = new ChromeDriver(Path.Combine(System.AppContext.BaseDirectory, "drivers", driverOSFolder)))
+                string driverOsFolder = GetDriverOsFolder();
+                using (var driver = new ChromeDriver(Path.Combine(AppContext.BaseDirectory, "drivers", driverOsFolder)))
                 {
                     var pexer = new Pexer(configuration, driver, logger);
 
@@ -50,7 +49,7 @@ namespace SilverPexer
             }
         }
 
-        private static string GetDriverOSFolder()
+        private static string GetDriverOsFolder()
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
