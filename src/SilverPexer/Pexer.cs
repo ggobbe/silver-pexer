@@ -1,11 +1,11 @@
-using System;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Threading;
 using Microsoft.Extensions.Logging;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Interactions;
+using System;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Threading;
 
 namespace SilverPexer
 {
@@ -57,7 +57,7 @@ namespace SilverPexer
         public bool IsMonsterPresent()
         {
             NavigateTo("map.php", force: false);
-            return _driver.FindElementsByCssSelector("a[href^=\"fight.php?type=monster\"]").Any();
+            return _driver.FindElementsByCssSelector($"img[src^=\"systeme/monster{_configuration.Monster}.\"]").Any();
         }
 
         public void AttackMonster()
@@ -69,7 +69,14 @@ namespace SilverPexer
             var killed = false;
             while (!killed)
             {
-                _driver.FindElementByCssSelector($"input[src^=\"systeme/mag{_configuration.Spell}.\"]").Click();
+                if (_configuration.Spell.Equals("0"))
+                {
+                    _driver.FindElementByCssSelector("a[href^=\"?action=fight&attack=\"]").Click();
+                }
+                else
+                {
+                    _driver.FindElementByCssSelector($"input[src^=\"systeme/mag{_configuration.Spell}.\"]").Click();
+                }
                 _actionCount += 2;
                 _hitsCount++;
 
@@ -103,7 +110,7 @@ namespace SilverPexer
 
             if (_driver.Url.Contains("map.php"))
             {
-                if (IsOtherPlayerPresent() || (_configuration.GoToSleepWhenMessage && IsNewMessagePresent()))
+                if ((_configuration.GoToSleepWhenPlayer && IsOtherPlayerPresent()) || (_configuration.GoToSleepWhenMessage && IsNewMessagePresent()))
                 {
                     GoToSleep();
                     return;
@@ -121,14 +128,14 @@ namespace SilverPexer
             NavigateTo("myperso.php");
 
             // Level up could reset the hitsCount
-            if(_hitsCount == 0) 
+            if (_hitsCount == 0)
             {
                 return;
             }
 
             // Find potion container
             var potion = _driver.FindElementByCssSelector($"img[src^=\"systeme/obj{_configuration.Potion.Id}.\"");
-            for(int j = 0; j < 4; j++)
+            for (int j = 0; j < 4; j++)
             {
                 potion = potion.FindElement(By.XPath(".."));
             }
@@ -137,7 +144,7 @@ namespace SilverPexer
             potion.FindElement(By.CssSelector("input[name=\"nbr\"]")).Clear();
             potion.FindElement(By.CssSelector("input[name=\"nbr\"]")).SendKeys(_configuration.Potion.Amount.ToString());
             potion.FindElement(By.CssSelector("input[name=\"Submit2\"]")).Click();
-                
+
             _hitsCount = 0;
         }
 
@@ -145,7 +152,7 @@ namespace SilverPexer
         {
             while (Continue && !IsMonsterPresent())
             {
-                if (IsLootPresent())
+                if (_configuration.GrabLoot && IsLootPresent())
                 {
                     GrabLoot();
                     continue;

@@ -19,12 +19,15 @@ You can edit `.\bin\appsettings.json` to change the following settings :
 - `pathToSleep` The path to the closest inn or camp (used to go to sleep)
 - `timeToSleep` The time to sleep in the inn (in hours)
 - `goToSleepWhenMessage` To go to sleep when a message is received (true or false)
+- `goToSleepWhenPlayer` To go to sleep when another player is spotted (true or false),
+- `grabLoot`: To grab the loot on the ground (true or false),
 - `levelUp` Stats distribution on level up
   - `constitution` The amount of points to place in constitution
   - `strength` The amount of points to place in strength
   - `agility` The amount of points to place in agility
   - `intelligence` The amount of points to place in intelligence
-- `spell` The spell number to use for attacking monsters (e.g. Cone de froid image src is systeme/mag`17`.gif, hence the value should be **17**)
+- `spell` The spell number to use for attacking monsters (e.g. Cone de froid image src is systeme/mag`17`.gif, hence the value should be **17**, `0` for swichting to warrior mode)
+- `monster` The monster ID to use for attacking monsters (e.g. Leviathan de Corail src is systeme/monster`286`.gif, hence the value should be **286**)
 - `potion` Potion to drink
   - `id` The potion number (e.g. systeme/obj`303`.gif is the image for a mana potion, hence the value should be **303**)
   - `amount` The amount of potions to drink
@@ -36,3 +39,6 @@ You can edit `.\bin\appsettings.json` to change the following settings :
 - .NET Framework 4.6.2
 - .NET Core 1.1+
 - Google Chrome 55+
+
+## Linux and MacOS support
+You can fetch the "feature/unix-support" branch but it only works with .NET Core 1.0 so far and has problems running on Windows.
