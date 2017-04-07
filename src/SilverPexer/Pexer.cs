@@ -64,8 +64,7 @@ namespace SilverPexer
         {
             NavigateTo("map.php", force: false);
 
-            _driver.FindElementByCssSelector("a[href^=\"fight.php?type=monster\"]").Click();
-
+            _driver.FindElementByCssSelector($"img[src^=\"systeme/monster{_configuration.Monster}\"]").Click();
             var killed = false;
             while (!killed)
             {
