@@ -9,20 +9,22 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="1.1.1" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="1.1.1" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="1.1.1" />
-    <PackageReference Include="CoreCompat.Selenium.WebDriver" Version="3.2.0-beta003" />
+    <PackageReference Include="Selenium.Chrome.WebDriver" Version="2.30" />
+    <PackageReference Include="Selenium.WebDriver" Version="3.4.0" />
+    <PackageReference Include="System.Security.Permissions" Version="4.4.0-preview1-25305-02" />
   </ItemGroup>
-    <ItemGroup> 
-    <None Update="appsettings.json"> 
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory> 
-    </None> 
-    <None Update="drivers\linux\chromedriver"> 
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory> 
-    </None> 
-    <None Update="drivers\osx\chromedriver"> 
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory> 
-    </None> 
-    <None Update="drivers\windows\chromedriver.exe"> 
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory> 
-    </None> 
-  </ItemGroup> 
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="drivers\linux\chromedriver">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="drivers\osx\chromedriver">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="drivers\windows\chromedriver.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>
